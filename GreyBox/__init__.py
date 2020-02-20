@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from WhiteBox.Backtest.api import (
+from GreyBox.Backtest.api import (
     GetRet,
     )
 

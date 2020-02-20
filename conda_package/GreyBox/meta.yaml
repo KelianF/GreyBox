@@ -1,12 +1,12 @@
 {% set version = "0.0.2" %}
 
 package:
-  name: whitebox
+  name: greybox
   version: {{ version }}
 
 source:
   git_rev: master
-  git_url: https://github.com/KelianF/WhiteBox.git
+  git_url: https://github.com/KelianF/GreyBox.git
 
 requirements:
   host:
@@ -20,7 +20,7 @@ test:
     - WhiteBox
 
 about:
-  home: https://github.com/KelianF/WhiteBox
+  home: https://github.com/KelianF/GreyBox
   license: MIT
-  summary: 'Getting image size from png/jpeg/jpeg2000/gif file'
+  summary: 'Help for quant finance'
   description: 'Helpful backtesting and signal processing tool'

@@ -20,7 +20,7 @@ test:
     - WhiteBox
 
 about:
-  home: https://github.com/KelianF/GreyBox
+  home: https://github.com/KelianF/GreyBox.git
   license: MIT
   summary: 'Help for quant finance'
   description: 'Helpful backtesting and signal processing tool'

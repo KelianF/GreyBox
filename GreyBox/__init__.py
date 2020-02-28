@@ -2,7 +2,8 @@
 
 
 from GreyBox.Backtest.api import (
-    GetRet,
+    Backtest,
+    Metrics,
     )
 
 

@@ -22,57 +22,52 @@ class Backtest:
         self.name = Ticker
         self.TimeSeries = self.Updatedb()
         self.returns = self.Returns()
-    
-    '''
-    Add liste 
-    
+
+        
+        
+        
     def Aggregate(self, Start = "20190101", End = pd.Timestamp.today().strftime("%Y%m%d")):
         Ticker = str(self.name)
-        if Ticker is list
+        if isinstance(Ticker, list):
+            dfAll = None
+            for Tick in Ticker:
+                Pointer = self.GetData(Tick, Start = "20190101", End = pd.Timestamp.today().strftime("%Y%m%d"))
+                if dfAll is None:
+                    dfAll = Pointer
+                else:
+                    dfAll = pd.concat((dfAll, Pointer), axis = 1)
+        else: 
+            dfAll = self.GetData(Ticker, Start = "20190101", End = pd.Timestamp.today().strftime("%Y%m%d"))
+        return dfAll
     
     
-def AggregateData(Ticker, Start = "20190101", End = pd.Timestamp.today().strftime("%Y%m%d")):
-    if isinstance(Ticker, list):
-        dfAll = None
-        for Tick in Ticker:
-            Pointer = GetData(Tick, Start = "20190101", End = pd.Timestamp.today().strftime("%Y%m%d"))
-            if dfAll is None:
-                dfAll = Pointer
-            else:
-                dfAll = pd.concat((dfAll, Pointer), axis = 1)
-    else: 
-        dfAll = GetData(Ticker, Start = "20190101", End = pd.Timestamp.today().strftime("%Y%m%d"))
-    return dfAll
-
-def BloombergRequest(Ticker, Start, End):
-    Pointer = blp.bdh(tickers= [Ticker],start_date = Start , end_date = End)
-    Pointer.index = Pointer.index.strftime("%Y%m%d").astype(int)
-    Pointer.columns = [Ticker]
-    return Pointer
-
-def GetData(Ticker, Start = "20190101", End = pd.Timestamp.today().strftime("%Y%m%d")):
-    if Ticker + ".csv" in os.listdir(r"\\10.155.31.149\멀티에셋\Kelian\DATA\MARKET"):   # Folder Location
-        #print("Got From DataBase")
-        Pointer = pd.read_csv(r"\\10.155.31.149\멀티에셋\Kelian\DATA\MARKET\\" + Ticker + ".csv", index_col=0)
-        if Start < str(Pointer.index.min()):
-            Point = BloombergRequest(Ticker, Start, str(Pointer.index.min()))
-            Pointer = pd.concat((Pointer, Point), axis = 0)
-        if End > str(Pointer.index.max()):
-            Point = BloombergRequest(Ticker, str(Pointer.index.max()), End)
-            Pointer = pd.concat((Pointer, Point), axis = 0)
-        Pointer.to_csv(r"\\10.155.31.149\멀티에셋\Kelian\DATA\MARKET\\" + Ticker + ".csv", index=True)
-        return Pointer
-    else:
-        Pointer = BloombergRequest(Ticker, Start, End)
-        Pointer.to_csv(r"\\10.155.31.149\멀티에셋\Kelian\DATA\MARKET\\" + Ticker + ".csv", index=True)
+    def BloombergRequest(Ticker, Start, End):
+        Pointer = blp.bdh(tickers= [Ticker],start_date = Start , end_date = End)
+        Pointer.index = Pointer.index.strftime("%Y%m%d").astype(int)
+        Pointer.columns = [Ticker]
         return Pointer
     
     
+    def GetData(self, Start = "20190101", End = pd.Timestamp.today().strftime("%Y%m%d")):
+        Ticker = str(self.name)
+        if Ticker + ".csv" in os.listdir(r"\\10.155.31.149\멀티에셋\Kelian\DATA\MARKET"):   # Folder Location
+            #print("Got From DataBase")
+            Pointer = pd.read_csv(r"\\10.155.31.149\멀티에셋\Kelian\DATA\MARKET\\" + Ticker + ".csv", index_col=0)
+            if Start < str(Pointer.index.min()):
+                Point = self.BloombergRequest(Ticker, Start, str(Pointer.index.min()))
+                Pointer = pd.concat((Pointer, Point), axis = 0)
+            if End > str(Pointer.index.max()):
+                Point = self.BloombergRequest(Ticker, str(Pointer.index.max()), End)
+                Pointer = pd.concat((Pointer, Point), axis = 0)
+            Pointer.to_csv(r"\\10.155.31.149\멀티에셋\Kelian\DATA\MARKET\\" + Ticker + ".csv", index=True)
+            return Pointer
+        else:
+            Pointer = self.BloombergRequest(Ticker, Start, End)
+            Pointer.to_csv(r"\\10.155.31.149\멀티에셋\Kelian\DATA\MARKET\\" + Ticker + ".csv", index=True)
+            return Pointer
     
     
-    
-    
-    '''
+
         
     def Updatedb(self, Start = "20190101", End = pd.Timestamp.today().strftime("%Y%m%d")):
         
@@ -132,10 +127,10 @@ class Metrics:
         return pd.concat((self.returns, self.Benchmark), axis=1).dropna().corr().iloc[1,0]
         
     def Sharpe(self):
-        return self.returns.mean() / self.returns.std()
+        return np.sqrt(252) * self.returns.mean() / self.returns.std()
     
     def TreynorRatio(self):
-        return self.Average_Returns() / self.Beta
+        return np.sqrt(252) * self.Average_Returns() / self.Beta
     
  
  
